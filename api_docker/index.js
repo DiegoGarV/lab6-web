@@ -16,7 +16,7 @@ console.log('enable Cors')
 app.use(cors())
 
 app.use((req, res, next) => {
-  const currentTime = moment().format('YYYY-MM-DD HH:mm:ss');
+  const currentTime = moment().format('YYYY-MM-DD HH:mm:ss')
 
   const logData = {
     time: currentTime,
@@ -27,13 +27,12 @@ app.use((req, res, next) => {
 
   fs.appendFile('log.txt', JSON.stringify(logData) + '\n', (err) => {
     if (err) {
-      console.error('Error writing to log file:', err);
+      console.error('Error writing to log file:', err)
     }
   })
 
-  next();
-});
-
+  next()
+})
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -60,6 +59,8 @@ app.listen(port, () => {
  *                 type: string
  *               content:
  *                 type: string
+ *               item_image:
+ *                 type: string
  *     responses:
  *       201:
  *         description: El blog fue creado exitosamente.
@@ -67,9 +68,9 @@ app.listen(port, () => {
  *         description: El formato en el cuerpo de la solicitud es incorrecto.
  */
 app.post('/blogs', async (req, res) => {
-  const [title, content] = [req.body.title, req.body.content]
-  console.log(title, content)
-  const blogs = await createBlog(title, content)
+  const [title, content, item_image] = [req.body.title, req.body.content, req.body.item_image]
+  console.log(title, content, item_image)
+  const blogs = await createBlog(title, content, item_image)
   res.status(blogs.status).json(blogs)
 })
 
@@ -118,7 +119,7 @@ app.delete('/blogs/:id', async (req,res) =>{
   if (result.status === 404) {
     res.status(404).json({ error: 'Blog not found' })
   } else {
-      res.status(result.status).json({status: result.status})
+    res.status(result.status).json({status: result.status})
   }
 })
 
@@ -174,6 +175,8 @@ app.get('/blogs/:id', async (req, res) => {
  *                 type: string
  *               content:
  *                 type: string
+ *               item_image:
+ *                  type: string
  *     responses:
  *       200:
  *         description: Operación exitosa. Devuelve el blog actualizado.
@@ -185,9 +188,9 @@ app.get('/blogs/:id', async (req, res) => {
 app.put('/blogs/:id', async (req, res) => {
   const id = req.params.id
   console.log(id)
-  const [title, content] = [req.body.title, req.body.content]
-  console.log(title, content)
-  const blog = await editBlog(id, title, content)
+  const [title, content, item_image] = [req.body.title, req.body.content, req.body.item_image]
+  console.log(title, content, item_image)
+  const blog = await editBlog(id, title, content, item_image)
   res.status(blog.status).json(blog)
 })
 
