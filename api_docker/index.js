@@ -2,6 +2,8 @@ import express from 'express'
 import cors from 'cors'
 import moment from 'moment'
 import fs from 'fs'
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 import {getAllBlogs, createBlog, deleteBlog, getBlogById, editBlog} from './db.js'
 import { swaggerDocs as V1SwaggerDocs } from './swagger.js'
 
@@ -9,11 +11,16 @@ const app = express()
 const port = 3000
 
 // This line is necessary to parse the request body
-app.use(express.json())
+app.use(express.json({limit: '50mb'}))
+app.use(express.urlencoded({limit: '50mb'}))
 
 // Implementa cors
 console.log('enable Cors')
 app.use(cors())
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+app.use("/public/upload", express.static(__dirname + "/public/upload"))
 
 app.use((req, res, next) => {
   const currentTime = moment().format('YYYY-MM-DD HH:mm:ss')
@@ -69,7 +76,16 @@ app.listen(port, () => {
  */
 app.post('/blogs', async (req, res) => {
   const [title, content, item_image] = [req.body.title, req.body.content, req.body.item_image]
-  console.log(title, content, item_image)
+  if (req.body.item_image1=""){
+    var imagen = req.body.item_image
+    var nombreArchivo = Math().random().toString() + ".jpg"
+    fs.writeFile("public/upload/" + nombreArchivo, imagen, ' base64', (error) => {
+      if (error) {
+        res.status(500).json('Internal Server Error')
+        item_image = "public/upload/" + nombreArchivo
+      }
+    })
+  }
   const blogs = await createBlog(title, content, item_image)
   res.status(blogs.status).json(blogs)
 })

@@ -11,9 +11,9 @@ export async function getAllBlogs () {
   }
 }
 
-export async function createBlog (title, content) {
+export async function createBlog (title, content, item_image) {
   try {
-    const [result] = await conn.query(`INSERT INTO blogs (title, content) VALUES ('${title.replace(/'/g, '\'\'')}', '${content.replace(/'/g, '\'\'')}')`)
+    const [result] = await conn.query(`INSERT INTO blogs (title, content, item_image) VALUES ('${title.replace(/'/g, '\'\'')}', '${content.replace(/'/g, '\'\'')}', '${item_image.replace(/'/g, '\'\'')}')`)
     return { status: 201, data: result }
 
   } catch (e) {
@@ -50,14 +50,14 @@ export async function getBlogById (id) {
   }
 }
 
-export async function editBlog (id, title, content){
+export async function editBlog (id, title, content, item_image){
   try {
     const [existingBlog] = await conn.query(`SELECT * FROM blogs WHERE id = ${id}`)
     if (existingBlog.length === 0) {
       return { status: 404, error: 'Blog not found' }
     }
 
-    const [result] = await conn.query(`UPDATE blogs SET title = '${title.replace(/'/g, '\'\'')}', content = '${content.replace(/'/g, '\'\'')}' WHERE id = ${id}`)
+    const [result] = await conn.query(`UPDATE blogs SET title = '${title.replace(/'/g, '\'\'')}', content = '${content.replace(/'/g, '\'\'')}', item_image = '${item_image.replace(/'/g, '\'\'')}' WHERE id = ${id}`)
     return { status: 200, data: result }
 
   } catch (e) {
