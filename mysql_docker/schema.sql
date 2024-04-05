@@ -11,5 +11,6 @@ CREATE TABLE IF NOT EXISTS blogs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
-    item_image TEXT NOT NULL
+    item_image MEDIUMTEXT NOT NULL,
+    image_description TEXT NOT NULL
 );

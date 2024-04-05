@@ -68,6 +68,8 @@ app.listen(port, () => {
  *                 type: string
  *               item_image:
  *                 type: string
+ *               image_description:
+ *                 type: string  
  *     responses:
  *       201:
  *         description: El blog fue creado exitosamente.
@@ -75,18 +77,8 @@ app.listen(port, () => {
  *         description: El formato en el cuerpo de la solicitud es incorrecto.
  */
 app.post('/blogs', async (req, res) => {
-  const [title, content, item_image] = [req.body.title, req.body.content, req.body.item_image]
-  if (req.body.item_image1=""){
-    var imagen = req.body.item_image
-    var nombreArchivo = Math().random().toString() + ".jpg"
-    fs.writeFile("public/upload/" + nombreArchivo, imagen, ' base64', (error) => {
-      if (error) {
-        res.status(500).json('Internal Server Error')
-        item_image = "public/upload/" + nombreArchivo
-      }
-    })
-  }
-  const blogs = await createBlog(title, content, item_image)
+  const [title, content, item_image, image_description] = [req.body.title, req.body.content, req.body.item_image, req.body.image_description]
+  const blogs = await createBlog(title, content, item_image, image_description)
   res.status(blogs.status).json(blogs)
 })
 
@@ -193,6 +185,8 @@ app.get('/blogs/:id', async (req, res) => {
  *                 type: string
  *               item_image:
  *                  type: string
+ *               image_description:
+ *                 type: string  
  *     responses:
  *       200:
  *         description: Operación exitosa. Devuelve el blog actualizado.
@@ -204,9 +198,8 @@ app.get('/blogs/:id', async (req, res) => {
 app.put('/blogs/:id', async (req, res) => {
   const id = req.params.id
   console.log(id)
-  const [title, content, item_image] = [req.body.title, req.body.content, req.body.item_image]
-  console.log(title, content, item_image)
-  const blog = await editBlog(id, title, content, item_image)
+  const [title, content, item_image, image_description] = [req.body.title, req.body.content, req.body.item_image, req.body.image_description]
+  const blog = await editBlog(id, title, content, item_image, image_description)
   res.status(blog.status).json(blog)
 })
 
